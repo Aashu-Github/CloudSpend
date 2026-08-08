@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}CloudSpend — Error{% endblock %}
+{% block content %}<section class="inner-hero"><span class="eyebrow">SAFE FAILURE</span><h1>CloudSpend couldn't continue.</h1><p>{{ message }}</p></section><section class="inner-content narrow"><a class="btn btn-secondary" href="{{ url_for('web.home') }}">Return home</a></section>{% endblock %}
