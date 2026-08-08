@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methodology — CloudSpend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body data-page="methodology" >
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+  <nav id="nav">
+    <a class="nav-logo" href="./index.html" aria-label="CloudSpend home"><span class="logo-main">CloudSpend</span><span class="logo-mark"></span></a>
+    <button class="mobile-menu-btn" type="button" aria-expanded="false" aria-controls="navLinks">MENU</button>
+    <div class="nav-links" id="navLinks"><a class="nav-link" href="./index.html">Home</a><a class="nav-link" href="./import.html">Import</a><a class="nav-link" href="./aws.html">Live AWS</a><a class="nav-link active" href="./methodology.html">Methodology</a><a class="nav-link" href="./stack.html">Stack</a><a class="nav-github" href="https://github.com/Aashu-Github/cloudspend" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+  </nav>
+  <main>
+<section class="inner-hero"><a class="back-btn" href="./index.html">← Back to home</a><span class="inner-page-label">03 — Methodology</span><h1 class="inner-page-title">Evidence before action.</h1><p class="inner-page-desc">Every input source becomes the same canonical model before versioned deterministic rules produce advisory findings.</p></section>
+<section class="inner-content">
+  <div class="steps">
+    <div class="step-row"><div class="step-num">01</div><div><span class="step-tag">PROVIDER BOUNDARY</span><h2 class="step-title">Normalize first.</h2><p class="step-body">Demo fixtures, uploads, and live Boto3 calls terminate at adapters. Optimization rules never parse AWS responses or spreadsheets directly.</p><div class="chips"><span class="chip">FixtureProvider</span><span class="chip">FileProvider</span><span class="chip">AwsProvider</span></div></div></div>
+    <div class="step-row"><div class="step-num">02</div><div><span class="step-tag">VALIDATION GATE</span><h2 class="step-title">Reject malformed data.</h2><p class="step-body">Pydantic validates canonical objects. Missing memory remains unknown rather than becoming zero, while cost provenance remains actual, allocated, estimated, or unavailable.</p><div class="chips"><span class="chip">Pydantic</span><span class="chip">Source lineage</span><span class="chip">Cost provenance</span></div></div></div>
+    <div class="step-row"><div class="step-num">03</div><div><span class="step-tag">RULE ENGINE</span><h2 class="step-title">Use multiple signals.</h2><p class="step-body">Idle detection combines CPU average, p95/max, network evidence, burst protection, and observation-window quality. Rightsizing, scheduling, orphan storage, and anomaly rules have separate criteria.</p><div class="chips"><span class="chip">CPU</span><span class="chip">Network</span><span class="chip">Burst score</span><span class="chip">Confidence</span></div></div></div>
+    <div class="step-row"><div class="step-num">04</div><div><span class="step-tag">HUMAN REVIEW</span><h2 class="step-title">No destructive MVP.</h2><p class="step-body">Findings use “candidate,” “review,” and “estimated savings.” CloudSpend does not stop instances, resize infrastructure, or delete volumes.</p><div class="chips"><span class="chip">Read-only</span><span class="chip">Explainable</span><span class="chip">Human decision</span></div></div></div>
+  </div>
+  <div class="rule-grid">
+    <div class="rule-card"><span>EC2-IDLE-001</span><strong>avg CPU &lt; 5%</strong><p>p95/max &lt; 20%, low network, at least 7 days, no burst concern.</p></div>
+    <div class="rule-card"><span>EC2-RIGHTSIZE-001</span><strong>avg CPU &lt; 20%</strong><p>p95 &lt; 40%, memory under 40% when available, no high spikes.</p></div>
+    <div class="rule-card"><span>EBS-ORPHAN-001</span><strong>unattached &gt; 7 days</strong><p>Size and encryption remain evidence; deletion is never automatic.</p></div>
+    <div class="rule-card"><span>COST-ANOMALY-001</span><strong>rolling baseline</strong><p>Reports a cost jump when history and thresholds support it; never invents root cause.</p></div>
+  </div>
+</section></main>
+  <footer class="site-footer">
+    <div class="footer-brand">Cloud<span>Spend.</span></div>
+    <div class="footer-right"><span>GitHub Pages frontend · Flask API backend</span><a class="footer-link" href="./methodology.html">Read-only by design</a></div>
+  </footer>
+  <div id="app-modal" class="modal" hidden aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-message">
+      <button class="modal-close" type="button" aria-label="Close" data-modal-close>×</button>
+      <span class="section-label" id="modal-kicker">CLOUDSPEND</span>
+      <h2 id="modal-title">Something went wrong.</h2>
+      <p id="modal-message"></p>
+      <code id="modal-code" class="modal-code" hidden></code>
+      <button class="btn btn-primary modal-action" type="button" data-modal-close>Close</button>
+    </section>
+  </div>
+  <script src="./assets/config.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Methodology — CloudSpend{% endblock %}
+{% block content %}
+<section class="inner-hero">
+  <a class="back-btn" href="{{ url_for('web.home') }}">← Back to home</a>
+  <span class="inner-page-label">03 — Methodology</span>
+  <h1 class="inner-page-title">Evidence before action.</h1>
+  <p class="inner-page-desc">Every input source becomes the same canonical model before versioned deterministic rules produce advisory findings.</p>
+</section>
+<section class="inner-content">
+  <div class="steps">
+    <div class="step-row"><div class="step-num">01</div><div><span class="step-tag">PROVIDER BOUNDARY</span><h2 class="step-title">Normalize first.</h2><p class="step-body">Demo fixtures, uploads, and live Boto3 calls terminate at adapters. Optimization rules never parse AWS responses or spreadsheets directly.</p><div class="chips"><span class="chip">FixtureProvider</span><span class="chip">FileProvider</span><span class="chip">AwsProvider</span></div></div></div>
+    <div class="step-row"><div class="step-num">02</div><div><span class="step-tag">VALIDATION GATE</span><h2 class="step-title">Reject malformed data.</h2><p class="step-body">Pydantic validates canonical objects. Missing memory remains unknown rather than becoming zero, while cost provenance remains actual, allocated, estimated, or unavailable.</p><div class="chips"><span class="chip">Pydantic</span><span class="chip">Source lineage</span><span class="chip">Cost provenance</span></div></div></div>
+    <div class="step-row"><div class="step-num">03</div><div><span class="step-tag">RULE ENGINE</span><h2 class="step-title">Use multiple signals.</h2><p class="step-body">Idle detection combines CPU average, p95/max, network evidence, burst protection, and observation-window quality. Rightsizing, scheduling, orphan storage, and anomaly rules have separate criteria.</p><div class="chips"><span class="chip">CPU</span><span class="chip">Network</span><span class="chip">Burst score</span><span class="chip">Confidence</span></div></div></div>
+    <div class="step-row"><div class="step-num">04</div><div><span class="step-tag">HUMAN REVIEW</span><h2 class="step-title">No destructive MVP.</h2><p class="step-body">Findings use “candidate,” “review,” and “estimated savings.” CloudSpend does not stop instances, resize infrastructure, or delete volumes.</p><div class="chips"><span class="chip">Read-only</span><span class="chip">Explainable</span><span class="chip">Human decision</span></div></div></div>
+  </div>
+
+  <div class="rule-grid">
+    <div class="rule-card"><span>EC2-IDLE-001</span><strong>avg CPU &lt; {{ settings.idle_cpu_avg_threshold }}%</strong><p>p95/max &lt; {{ settings.idle_cpu_p95_threshold }}%, low network, at least 7 days, no burst concern.</p></div>
+    <div class="rule-card"><span>EC2-RIGHTSIZE-001</span><strong>avg CPU &lt; {{ settings.rightsize_cpu_avg_threshold }}%</strong><p>p95 &lt; {{ settings.rightsize_cpu_p95_threshold }}%, memory under 40% when available, no high spikes.</p></div>
+    <div class="rule-card"><span>EBS-ORPHAN-001</span><strong>unattached &gt; {{ settings.orphan_ebs_min_age_days }} days</strong><p>Size and encryption remain evidence; deletion is never automatic.</p></div>
+    <div class="rule-card"><span>COST-ANOMALY-001</span><strong>rolling baseline</strong><p>Reports a cost jump when history and thresholds support it; never invents root cause.</p></div>
+  </div>
+</section>
+{% endblock %}
