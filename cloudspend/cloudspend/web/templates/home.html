@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}CloudSpend — Local-first AWS FinOps{% endblock %}
+{% block content %}
+<section class="home-hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">// AWS FinOps Project</p>
+    <h1 class="hero-title">Cloud<br>Spend<br><em>Optimizer.</em></h1>
+    <p class="hero-tagline">Correlate AWS inventory, utilization, and cost signals into evidence-backed savings opportunities — with deterministic rules and no destructive cloud actions.</p>
+    <div class="hero-ctas">
+      <form action="{{ url_for('web.api_demo') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="btn btn-primary" type="submit">Try Demo →</button>
+      </form>
+      <a class="btn btn-ghost" href="{{ url_for('web.import_page') }}">Import AWS Data</a>
+      <a class="btn btn-ghost" href="{{ url_for('web.aws_page') }}">Connect Local AWS</a>
+    </div>
+  </div>
+
+  <aside class="hero-right" aria-label="CloudSpend project snapshot">
+    <div class="model-card">
+      <div class="model-icon">CS</div>
+      <h3>Analysis Snapshot</h3>
+      <p class="model-role">// Deterministic FinOps · local-first</p>
+      <div class="info-row"><span class="info-label">Status</span><span class="status-wrap"><span class="status-dot"></span>Interactive demo</span></div>
+      <div class="info-row"><span class="info-label">Sources</span><span>3 data modes</span></div>
+      <div class="info-row"><span class="info-label">Rules</span><span>5 families</span></div>
+      <div class="info-row"><span class="info-label">Actions</span><span>0 destructive</span></div>
+      <div class="info-row"><span class="info-label">Runtime</span><span>Local Bash</span></div>
+    </div>
+  </aside>
+</section>
+
+<section class="home-section">
+  <p class="section-label">01 — Explore</p>
+  <h2 class="section-title">Inside the project.</h2>
+  <div class="project-list">
+    <form class="project-form" action="{{ url_for('web.api_demo') }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="project-item" type="submit">
+        <span class="project-copy"><span class="project-num">01 / 05</span><strong class="project-name">Zero-cost Demo</strong><span class="project-desc">Load a deterministic AWS-like account locally and inspect real recommendation evidence without AWS credentials.</span><span class="project-stack"><span>FixtureProvider</span><span>Pydantic</span><span>Rules</span></span></span><span class="project-arrow">↗</span>
+      </button>
+    </form>
+    <a class="project-item" href="{{ url_for('web.import_page') }}">
+      <span class="project-copy"><span class="project-num">02 / 05</span><strong class="project-name">Import AWS Data</strong><span class="project-desc">Drag in JSON, CSV, XLSX, or a manifest-driven ZIP and automatically validate, normalize, and analyze it.</span><span class="project-stack"><span>File ingestion</span><span>Schema detection</span><span>Security checks</span></span></span><span class="project-arrow">↗</span>
+    </a>
+    <a class="project-item" href="{{ url_for('web.aws_page') }}">
+      <span class="project-copy"><span class="project-num">03 / 05</span><strong class="project-name">Live AWS</strong><span class="project-desc">Use an existing local AWS profile or SSO session for a read-only scan of inventory, metrics, and available cost data.</span><span class="project-stack"><span>Boto3</span><span>CloudWatch</span><span>Cost Explorer</span></span></span><span class="project-arrow">↗</span>
+    </a>
+    <a class="project-item" href="{{ url_for('web.methodology') }}">
+      <span class="project-copy"><span class="project-num">04 / 05</span><strong class="project-name">Methodology</strong><span class="project-desc">See how provider data becomes canonical resources and why each versioned rule requires specific evidence before it fires.</span><span class="project-stack"><span>Idle EC2</span><span>Rightsizing</span><span>EBS</span><span>Anomalies</span></span></span><span class="project-arrow">↗</span>
+    </a>
+    <a class="project-item" href="{{ url_for('web.stack') }}">
+      <span class="project-copy"><span class="project-num">05 / 05</span><strong class="project-name">Technical Stack</strong><span class="project-desc">A laptop-scale Python application with provider adapters, deterministic optimization, secure file ingestion, and server-rendered UI.</span><span class="project-stack"><span>Python</span><span>Flask</span><span>Boto3</span><span>Plotly.js</span></span></span><span class="project-arrow">↗</span>
+    </a>
+  </div>
+
+  {% if recent %}
+  <div class="recent-block">
+    <p class="section-label">RECENT SCANS</p>
+    <div class="recent-list">
+      {% for scan in recent %}<a href="{{ url_for('web.scan_dashboard', scan_id=scan.id) }}"><span class="mono">{{ scan.source_mode|upper }}</span><span>{{ scan.id[:8] }}</span><span>→</span></a>{% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Overview — CloudSpend{% endblock %}
+{% block head %}<script src="{{ url_for('static', filename='plotly.min.js') }}"></script>{% endblock %}
+{% block content %}
+<section class="dashboard-hero">
+  <div><span class="eyebrow">{{ scan.source_mode|upper }} SCAN · {{ scan.id[:8] }}</span><h1>Optimization overview.</h1><p>{{ scan.resources|length }} canonical resources analyzed through the same deterministic rule engine.</p></div>
+  <div class="dashboard-actions"><a class="btn btn-secondary" href="{{ url_for('web.export_json', scan_id=scan.id) }}">Export JSON</a><a class="btn btn-ghost" href="{{ url_for('web.export_resources_csv', scan_id=scan.id) }}">Resources CSV</a><a class="btn btn-ghost" href="{{ url_for('web.export_csv', scan_id=scan.id) }}">Findings CSV</a></div>
+</section>
+<section class="dashboard-content">
+  {% if scan.warnings or scan.errors %}<div class="notice-stack">{% for warning in scan.warnings %}<div class="notice warning"><strong>Data quality</strong><span>{{ warning }}</span></div>{% endfor %}{% for error in scan.errors %}<div class="notice error"><strong>Partial scan</strong><span>{{ error }}</span></div>{% endfor %}</div>{% endif %}
+  <div class="kpi-grid">
+    <div class="kpi-card"><span class="kpi-label">OBSERVED / MODELED SPEND</span><strong>${{ "%.2f"|format(observed) }}</strong><small>monthly equivalent</small></div>
+    <div class="kpi-card glow"><span class="kpi-label">POTENTIAL SAVINGS</span><strong>${{ "%.2f"|format(savings) }}</strong><small>deduplicated by resource</small></div>
+    <div class="kpi-card"><span class="kpi-label">SAVINGS RATE</span><strong>{{ savings_pct }}%</strong><small>projection, not guarantee</small></div>
+    <div class="kpi-card"><span class="kpi-label">RESOURCES</span><strong>{{ scan.resources|length }}</strong><small>validated canonical objects</small></div>
+    <div class="kpi-card"><span class="kpi-label">OPPORTUNITIES</span><strong>{{ scan.recommendations|length }}</strong><small>versioned findings</small></div>
+  </div>
+  <div class="panel chart-panel">
+    <div class="panel-heading"><div><span class="eyebrow">COST × UTILIZATION</span><h2>Where spend meets workload.</h2></div><div class="cost-legend"><span>actual {{ cost_basis_counts.actual }}</span><span>allocated {{ cost_basis_counts.allocated }}</span><span>estimated {{ cost_basis_counts.estimated }}</span><span>unknown {{ cost_basis_counts.unavailable }}</span></div></div>
+    <div id="cost-util-chart" class="chart" data-points="{{ chart|tojson|forceescape }}"></div>
+  </div>
+  <div class="section-heading"><div><span class="eyebrow">RECOMMENDATIONS</span><h2>Evidence-backed opportunities.</h2></div><div class="filters"><select id="filter-category"><option value="">All categories</option><option value="idle">Idle</option><option value="rightsize">Rightsize</option><option value="schedule">Schedule</option><option value="orphan_storage">Orphan storage</option><option value="anomaly">Anomaly</option></select><select id="filter-confidence"><option value="">All confidence</option><option>high</option><option>medium</option><option>low</option></select><select id="filter-environment"><option value="">All environments</option>{% for env in environments %}<option value="{{ env }}">{{ env }}</option>{% endfor %}</select></div></div>
+  <div class="recommendation-list" id="recommendation-list">
+    {% for rec in scan.recommendations %}
+      {% set resource = scan.resources|selectattr('resource_id', 'equalto', rec.resource_id)|first %}
+      <article class="rec-card" data-category="{{ rec.category }}" data-confidence="{{ rec.confidence }}" data-environment="{{ resource.environment if resource else 'unknown' }}">
+        <div class="rec-main"><div class="rec-top"><span class="category-pill">{{ rec.category|replace('_',' ') }}</span><span class="confidence {{ rec.confidence }}">{{ rec.confidence }}</span><span class="rule-id">{{ rec.rule_id }} · v{{ rec.rule_version }}</span></div><h3>{{ rec.title }}</h3><a class="resource-link" href="{{ url_for('web.resource_detail', scan_id=scan.id, resource_id=rec.resource_id) }}">{{ resource.name if resource and resource.name else rec.resource_id }} <span class="mono">{{ rec.resource_id }}</span> →</a><p>{{ rec.suggested_action }}</p></div>
+        <div class="rec-savings"><span>EST. MONTHLY SAVINGS</span><strong>{% if rec.estimated_monthly_savings is not none %}${{ "%.2f"|format(rec.estimated_monthly_savings) }}{% else %}—{% endif %}</strong><small>{{ rec.savings_basis }} basis</small></div>
+        <details><summary>View evidence</summary><div class="evidence-grid">{% for e in rec.evidence %}<div><span>{{ e.key }}</span><strong>{{ e.value }}</strong>{% if e.threshold is not none %}<small>{{ e.threshold }}</small>{% endif %}</div>{% endfor %}</div>{% if rec.missing_signals %}<div class="missing-box"><strong>Missing signals:</strong> {{ rec.missing_signals|join(', ') }}</div>{% endif %}<p class="safety-note">{{ rec.safety_note }}</p></details>
+      </article>
+    {% else %}
+      <div class="empty-state"><span class="eyebrow">NO FINDINGS</span><h3>No optimization opportunity met the configured evidence thresholds.</h3><p>This can mean the fleet looks healthy or that the input lacks enough utilization/cost evidence. Check resource details and data-quality notes.</p></div>
+    {% endfor %}
+  </div>
+  <details class="panel scan-diagnostics"><summary><span class="eyebrow">SCAN INFO</span> Data sources & quality</summary><div class="evidence-grid full"><div><span>EC2 resources</span><strong>{{ scan_info.ec2_resources }}</strong></div><div><span>EBS resources</span><strong>{{ scan_info.ebs_resources }}</strong></div><div><span>With metrics</span><strong>{{ scan_info.resources_with_metrics }}</strong></div><div><span>With memory</span><strong>{{ scan_info.resources_with_memory }}</strong></div><div><span>Actual cost</span><strong>{{ cost_basis_counts.actual }}</strong></div><div><span>Allocated cost</span><strong>{{ cost_basis_counts.allocated }}</strong></div><div><span>Estimated cost</span><strong>{{ cost_basis_counts.estimated }}</strong></div><div><span>Rules executed</span><strong>{{ scan_info.rules_executed }}</strong></div></div><p class="safety-note">Provider: {{ scan.source_mode }}{% if scan.source_info.regions %} · regions {{ scan.source_info.regions|join(', ') }}{% endif %}{% if scan.source_info.account_id %} · account {{ scan.source_info.account_id }}{% endif %}. Missing Cost Explorer or memory telemetry is surfaced as a data-quality limitation rather than fabricated.</p></details>
+  <div class="section-heading resources-heading"><div><span class="eyebrow">CANONICAL INVENTORY</span><h2>Resources scanned.</h2></div></div>
+  <div class="table-wrap"><table class="resource-table"><thead><tr><th>Resource</th><th>Type</th><th>State</th><th>Environment</th><th>CPU avg</th><th>Cost basis</th><th>Findings</th></tr></thead><tbody>{% for resource in scan.resources %}{% set cpu=resource.metrics.get('CPUUtilization') %}{% set c=resource.costs.best_monthly_cost() %}<tr><td><a href="{{ url_for('web.resource_detail', scan_id=scan.id, resource_id=resource.resource_id) }}"><strong>{{ resource.name or 'Unnamed' }}</strong><span class="mono wrap-id">{{ resource.resource_id }}</span></a></td><td>{{ resource.resource_type }}</td><td><span class="state-dot {{ resource.state|lower }}"></span>{{ resource.state }}</td><td>{{ resource.environment }}</td><td>{% if cpu and cpu.avg is not none %}{{ "%.1f"|format(cpu.avg) }}%{% else %}—{% endif %}</td><td>{{ c[1] }}</td><td>{{ recs_by_id.get(resource.resource_id, [])|length }}</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}
