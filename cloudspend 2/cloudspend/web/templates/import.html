@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Import — CloudSpend{% endblock %}
+{% block content %}
+<section class="inner-hero">
+  <a class="back-btn" href="{{ url_for('web.home') }}">← Back to home</a>
+  <span class="inner-page-label">01 — Import</span>
+  <h1 class="inner-page-title">Analyze an AWS export.</h1>
+  <p class="inner-page-desc">Drop a machine-readable file. CloudSpend treats it as untrusted input, validates the file, detects its schema, normalizes it into canonical resources, and runs deterministic rules.</p>
+</section>
+<section class="inner-content">
+  <div class="predictor-shell import-shell">
+    <div class="pred-topbar"><h3>File Import</h3><span class="live-chip"><span class="live-dot"></span> Local processing</span></div>
+    <div class="pred-body">
+      <label id="drop-zone" class="drop-zone" for="file-input" tabindex="0" data-max-bytes="{{ settings.max_upload_bytes }}">
+        <input id="file-input" class="visually-hidden" type="file" accept=".json,.csv,.xlsx,.zip">
+        <span class="drop-icon">⇧</span>
+        <strong>Drop a file here</strong>
+        <span>or click anywhere in this box to choose a file · max {{ settings.max_upload_mb }} MB</span>
+        <span class="chips"><span class="chip">.json</span><span class="chip">.csv</span><span class="chip">.xlsx</span><span class="chip">.zip</span></span>
+      </label>
+      <div id="import-status" class="status-box" hidden></div>
+    </div>
+  </div>
+
+  <div class="info-sections">
+    <article><span class="section-label">DETECTION ORDER</span><h3>Known shapes first.</h3><p>CloudSpend checks bundle manifests, native EC2/EBS/CloudWatch/Cost Explorer responses, canonical exports, and CUR-like tables before considering optional AI mapping.</p></article>
+    <article><span class="section-label">UPLOAD SAFETY</span><h3>Temporary by default.</h3><p>Uploads use randomized temporary names, ZIP entries are inspected before extraction, macros are rejected, and raw files are removed after parsing.</p></article>
+  </div>
+</section>
+{% endblock %}

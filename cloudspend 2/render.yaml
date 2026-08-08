@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: cloudspend-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -e .
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: AI_PROVIDER
+        value: none
+      - key: DATABASE_URL
+        value: sqlite:////tmp/cloudspend.db
+      - key: CORS_ORIGINS
+        value: https://aashu-github.github.io
+      - key: SECRET_KEY
+        generateValue: true
