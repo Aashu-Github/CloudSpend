@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CloudSpend Mock AWS Bundle Wrapper",
+  "description": "Logical schema for the five JSON members stored inside a CloudSpend mock AWS ZIP bundle.",
+  "type": "object",
+  "required": [
+    "manifest.json",
+    "ec2_describe_instances.json",
+    "ec2_describe_volumes.json",
+    "cloudwatch_get_metric_data.json",
+    "cost_explorer_get_cost_and_usage_with_resources.json"
+  ],
+  "properties": {
+    "manifest.json": {
+      "type": "object",
+      "required": [
+        "bundle_version",
+        "files",
+        "window_start",
+        "window_end",
+        "metric_queries"
+      ],
+      "properties": {
+        "bundle_version": {
+          "type": "string"
+        },
+        "files": {
+          "type": "object"
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "metric_queries": {
+          "type": "object"
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ec2_describe_instances.json": {
+      "type": "object",
+      "required": [
+        "Reservations"
+      ],
+      "properties": {
+        "Reservations": {
+          "type": "array"
+        }
+      }
+    },
+    "ec2_describe_volumes.json": {
+      "type": "object",
+      "required": [
+        "Volumes"
+      ],
+      "properties": {
+        "Volumes": {
+          "type": "array"
+        }
+      }
+    },
+    "cloudwatch_get_metric_data.json": {
+      "type": "object",
+      "required": [
+        "MetricDataResults"
+      ],
+      "properties": {
+        "MetricDataResults": {
+          "type": "array"
+        }
+      }
+    },
+    "cost_explorer_get_cost_and_usage_with_resources.json": {
+      "type": "object",
+      "required": [
+        "ResultsByTime"
+      ],
+      "properties": {
+        "ResultsByTime": {
+          "type": "array"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
