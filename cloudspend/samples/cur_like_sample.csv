@@ -1,4 +1,0 @@
-line_item_resource_id,line_item_unblended_cost,product_region,line_item_product_code
-i-0123456789abcdef0,4.25,us-east-1,AmazonEC2
-i-0123456789abcdef0,3.75,us-east-1,AmazonEC2
-vol-0123456789abcdef0,1.20,us-east-1,AmazonEBS
